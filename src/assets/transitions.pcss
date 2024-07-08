@@ -1,0 +1,22 @@
+.fade-enter-active,
+.fade-leave-active {
+	transition: opacity 0.3s ease-in-out;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+	opacity: 0;
+}
+
+.drawer-enter-active,
+.drawer-leave-active {
+	@apply transform transition duration-500 ease-in-out;
+}
+
+.drawer-enter-from, .drawer-leave-to {
+	@apply translate-x-full;
+}
+
+.drawer-enter-to, .drawer-leave-from {
+  @apply translate-x-0;
+}
