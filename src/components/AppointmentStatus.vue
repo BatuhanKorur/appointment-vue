@@ -30,24 +30,24 @@ const fromNow = computed(() => {
 
 const statusClass = computed(() => {
   if (Statuses.UPCOMING === props.status) {
-    return 'text-blue-700'
+    return 'bg-blue-100 text-blue-700'
   }
   if (Statuses.CANCELLED === props.status) {
-    return 'text-red-700'
+    return 'bg-red-100 text-red-700'
   }
   if (Statuses.COMPLETED === props.status) {
-    return 'text-green-700'
+    return 'bg-green-100/75 text-green-700'
   }
 })
 </script>
 
 <template>
-  <div class="bg-indigo-50 p-4 rounded-md flex items-center justify-between">
+  <div class="p-4 rounded-md flex items-center justify-between" :class="statusClass">
     <div>
-      <p :class="statusClass">{{ status }}</p>
-      <p class="text-sm text-grey-500">{{ fromNow }}</p>
+      <p class="text-[15px] font-medium">{{ status }}</p>
+      <p class="text-[14px] opacity-60">{{ fromNow }}</p>
     </div>
-    <div class="text-right text-indigo-950 font-[425] text-sm">
+    <div class="text-right text-grey-600 font-[430] text-sm">
       <p>{{ formatDate }}</p>
       <p>{{ formatTime }}</p>
     </div>

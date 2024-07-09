@@ -4,7 +4,7 @@ const model = defineModel({
   required: true,
 })
 
-defineProps({
+const props = defineProps({
   label: {
     type: String,
     default: '',
@@ -18,7 +18,7 @@ defineProps({
       {{ label }}
     </label>
     <div class="input-wrapper">
-      <input v-model="model" type="datetime-local">
+      <input v-model="model" type="text">
     </div>
   </div>
 </template>

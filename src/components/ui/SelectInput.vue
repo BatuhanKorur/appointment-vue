@@ -1,19 +1,36 @@
 <script setup lang="ts">
+const model = defineModel({
+  type: String,
+  required: true,
+})
 defineProps({
+  label: {
+    type: String,
+    default: '',
+  },
   options: {
     type: Array,
     required: true,
-    default: () => [],
   },
 })
+
+function onChange(event: Event) {
+  const target = event.target as HTMLSelectElement
+  model.value = target.value
+}
 </script>
 
 <template>
-  <div class="border border-grey-200 rounded-md h-[52px]">
-    <select class="w-full h-full mx-4">
-      <option v-for="(option, index) in options" :key="index" :value="option">
-        {{ option }}
-      </option>
-    </select>
+  <div>
+    <label v-if="label">
+      {{ label }}
+    </label>
+    <div class="input-wrapper">
+      <select :value="modelValue" @change="onChange">
+        <option v-for="(option, index) in options" :key="index" :selected="option === modelValue">
+          {{ option }}
+        </option>
+      </select>
+    </div>
   </div>
 </template>

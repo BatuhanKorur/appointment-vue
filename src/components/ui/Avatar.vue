@@ -1,9 +1,17 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-const props = defineProps({
+import { ref } from 'vue'
+import { useElementHover } from '@vueuse/core'
+const avatarRef = ref<HTMLElement>()
+const isHovered = useElementHover(avatarRef)
+
+defineProps({
   size: {
     type: Number,
     default: 56,
+  },
+  name: {
+    type: String,
+    default: '',
   },
   background: {
     type: String,
@@ -17,9 +25,9 @@ const props = defineProps({
 </script>
 
 <template>
-  <div>
+  <div ref="avatarRef" class="relative">
     <div
-      class="rounded-full f-center border-4 border-white"
+      class="rounded-full f-center border-4 border-white cursor-pointer"
       :style="{
         backgroundColor: background,
         width: size + 'px',
@@ -29,6 +37,11 @@ const props = defineProps({
       <p class="font-semibold text-sm leading-none" :class="label ? 'text-grey-500' : 'text-white'">
         <template v-if="label">{{ label }}</template>
         <slot v-else />
+      </p>
+    </div>
+    <div v-if="isHovered && name" class="absolute bg-black/50 backdrop-blur-xl rounded-lg shadow-xl">
+      <p class="text-white text-sm leading-none px-4 py-2.5">
+        {{ name }}
       </p>
     </div>
   </div>

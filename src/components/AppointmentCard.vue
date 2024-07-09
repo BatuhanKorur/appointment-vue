@@ -2,12 +2,14 @@
 import { onMounted, ref } from 'vue'
 import type { Appointment, Contact, Agent } from '@/types'
 import { Airtable } from '@/server/api'
+
 import ContactItem from '@/components/ContactItem.vue'
 import AppointmentStatus from '@/components/AppointmentStatus.vue'
-const props = defineProps<{ appointment: Appointment }>()
-import { IconMapPin } from '@tabler/icons-vue'
 import AvatarGroup from '@/components/ui/AvatarGroup.vue'
+import AddressCard from '@/components/AddressCard.vue'
 
+const props = defineProps<{ appointment: Appointment }>()
+const emits = defineEmits(['click'])
 const contact = ref<Contact>()
 const agents = ref<Agent[]>([])
 onMounted(async() => {
@@ -22,15 +24,54 @@ onMounted(async() => {
     }
   }
 })
+
+function onClick() {
+  emits('click', props.appointment)
+}
 </script>
 <template>
-  <div class="border p-4 rounded-md shadow-sm space-y-2 grid grid-cols-4">
-    <ContactItem v-if="contact" :contact="contact" />
-    <div class="flex bg-grey-50 border border-grey-100 rounded-md p-4 space-x-1">
-      <IconMapPin size="20" class="text-grey-800" />
-      <p class="text-sm text-grey-800">{{ appointment.address }}</p>
-    </div>
-    <AppointmentStatus :date="appointment.appointment_date" :status="appointment.status" />
-    <AvatarGroup :avatars="agents" />
+  <div class="border rounded t-300 hover:border-blue-200 p-4 card-grid" @click="onClick">
+    <ContactItem v-if="contact" :contact="contact" class="contact" />
+    <AddressCard class="address">
+      {{ appointment.address }}
+    </AddressCard>
+    <AppointmentStatus
+      :date="appointment.appointment_date"
+      :status="appointment.status"
+      class="status"
+    />
+    <AvatarGroup :avatars="agents" class="agents" />
   </div>
 </template>
+
+<style scoped lang="postcss">
+.card-grid {
+	@apply grid grid-cols-10 grid-rows-subgrid gap-y-2;
+	@apply md:gap-x-3;
+	@apply lg:grid-cols-11;
+
+	.contact {
+		@apply col-span-10;
+		@apply md:col-span-5 md:row-start-1;
+		@apply lg:col-span-3;
+	}
+
+	.address {
+    @apply col-span-10;
+		@apply md:col-span-5 md:row-start-2;
+		@apply lg:col-span-3 lg:row-start-1;
+  }
+
+	.status {
+    @apply col-span-10;
+		@apply md:col-span-5 md:row-start-2;
+		@apply lg:col-span-3 lg:row-start-1;
+  }
+
+	.agents {
+    @apply col-span-10;
+		@apply md:col-span-5 md:row-start-1;
+		@apply lg:col-span-2;
+  }
+}
+</style>

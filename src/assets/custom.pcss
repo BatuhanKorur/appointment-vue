@@ -14,6 +14,17 @@
 	@apply transition duration-300 ease-in-out;
 }
 
+label {
+	@apply text-grey-700 text-sm;
+}
+
 .input-wrapper {
-	@apply border border-grey-200 rounded-md h-[52px];
+	@apply border rounded-md;
+	input, select {
+		@apply bg-transparent focus:outline-0 px-4;
+		@apply min-h-[52px] w-full;
+	}
+	&:focus-within {
+		@apply border-blue-500;
+	}
 }
