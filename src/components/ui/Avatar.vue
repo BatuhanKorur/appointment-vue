@@ -21,13 +21,18 @@ defineProps({
     type: String,
     default: '',
   },
+  active: {
+    type: Boolean,
+    default: false,
+  },
 })
 </script>
 
 <template>
   <div ref="avatarRef" class="relative">
     <div
-      class="rounded-full f-center border-4 border-white cursor-pointer"
+      class="rounded-full f-center border-4 cursor-pointer"
+      :class="active ? 'border-blue-600' : 'border-white'"
       :style="{
         backgroundColor: background,
         width: size + 'px',

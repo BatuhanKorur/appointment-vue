@@ -9,6 +9,10 @@ defineProps({
     type: String,
     default: '',
   },
+  dateOnly: {
+    type: Boolean,
+    default: false,
+  },
 })
 </script>
 
@@ -18,7 +22,7 @@ defineProps({
       {{ label }}
     </label>
     <div class="input-wrapper">
-      <input v-model="model" type="datetime-local">
+      <input v-model="model" :type="dateOnly ? 'date' : 'datetime-local'">
     </div>
   </div>
 </template>

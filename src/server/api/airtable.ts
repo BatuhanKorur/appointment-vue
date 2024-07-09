@@ -16,11 +16,12 @@ const Airtable = {
     await base(table).select({
       view: 'Grid view',
     }).eachPage((records, fetchNextPage) => {
-      records.forEach(({ fields }) => {
+      records.forEach(({ id, fields }) => {
         // Quick work around to fix typescript error on airtable Fieldset
         // Maybe should switch to airtable-ts library for better typescript support
         // https://www.npmjs.com/package/airtable-ts
         const f = fields as FieldSet
+        f.field_id = id
         data.push(f)
       })
       fetchNextPage()
@@ -37,6 +38,29 @@ const Airtable = {
     const record = await base(Tables.AGENTS).find(agentId)
     return record?.fields as Agent
   },
+
+  createAppointment: async function(appointment: Appointment) {
+    const result = await base(Tables.APPOINTMENTS).create([{ fields: appointment }])
+    return result[0]
+  },
+/*
+  updateAppointment: async function(appointmentId: number, appointment: Partial<Appointment>) {
+    const record = await base(Tables.APPOINTMENTS).find(appointmentId)
+    if (!record) {
+      throw new Error('Appointment not found')
+    }
+    await record.update(appointment)
+    return record.fields as Appointment
+  },
+
+  deleteAppointment: async function(appointmentId: number) {
+    const record = await base(Tables.APPOINTMENTS).find(appointmentId)
+    if (!record) {
+      throw new Error('Appointment not found')
+    }
+    await record.destroy()
+    return true
+  }, */
 }
 
 export default Airtable

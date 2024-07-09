@@ -5,8 +5,10 @@ import { Airtable } from '@/server/api'
 
 import ContactItem from '@/components/ContactItem.vue'
 import AppointmentStatus from '@/components/AppointmentStatus.vue'
-import AvatarGroup from '@/components/ui/AvatarGroup.vue'
+
 import AddressCard from '@/components/AddressCard.vue'
+import { Avatar } from '@/components/ui'
+import { fullName } from '@/utils'
 
 const props = defineProps<{ appointment: Appointment }>()
 const emits = defineEmits(['click'])
@@ -40,7 +42,15 @@ function onClick() {
       :status="appointment.status"
       class="status"
     />
-    <AvatarGroup :avatars="agents" class="agents" />
+    <div class="inline-flex space-x-[-16px]">
+      <Avatar
+        v-for="agent in agents"
+        :key="agent.id"
+        :name="fullName(agent.first_name, agent.last_name)"
+        :background="agent.color"
+      />
+    </div>
+    <!--    <AvatarGroup :avatars="agents" class="agents" />-->
   </div>
 </template>
 

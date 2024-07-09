@@ -1,15 +1,16 @@
 <script setup lang="ts">
 const model = defineModel({
   type: String,
-  required: true,
 })
 
-const props = defineProps({
+defineProps({
   label: {
     type: String,
     default: '',
   },
 })
+
+const emits = defineEmits(['focus'])
 </script>
 
 <template>
@@ -18,7 +19,7 @@ const props = defineProps({
       {{ label }}
     </label>
     <div class="input-wrapper">
-      <input v-model="model" type="text">
+      <input v-model="model" type="text" @focusin="emits('focus', true)">
     </div>
   </div>
 </template>
