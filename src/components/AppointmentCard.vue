@@ -46,11 +46,9 @@ function onClick() {
       <Avatar
         v-for="agent in agents"
         :key="agent.id"
-        :name="fullName(agent.first_name, agent.last_name)"
-        :background="agent.color"
+        :agent="agent"
       />
     </div>
-    <!--    <AvatarGroup :avatars="agents" class="agents" />-->
   </div>
 </template>
 

@@ -40,27 +40,19 @@ const Airtable = {
   },
 
   createAppointment: async function(appointment: Appointment) {
-    const result = await base(Tables.APPOINTMENTS).create([{ fields: appointment }])
-    return result[0]
+    const result = await base(Tables.APPOINTMENTS).create([
+      {
+        fields: {
+          appointment_date: appointment.appointment_date,
+          status: appointment.status,
+          address: appointment.address,
+          contact: [appointment.contact[0]],
+        },
+      },
+    ], { typecast: true })
+    console.log(result)
+    return result
   },
-/*
-  updateAppointment: async function(appointmentId: number, appointment: Partial<Appointment>) {
-    const record = await base(Tables.APPOINTMENTS).find(appointmentId)
-    if (!record) {
-      throw new Error('Appointment not found')
-    }
-    await record.update(appointment)
-    return record.fields as Appointment
-  },
-
-  deleteAppointment: async function(appointmentId: number) {
-    const record = await base(Tables.APPOINTMENTS).find(appointmentId)
-    if (!record) {
-      throw new Error('Appointment not found')
-    }
-    await record.destroy()
-    return true
-  }, */
 }
 
 export default Airtable

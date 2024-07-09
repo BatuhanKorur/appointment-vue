@@ -7,16 +7,15 @@ import { AppButton, Drawer, SelectInput, DateInput, TextInput } from '@/componen
 import LoadingPanel from '@/components/LoadingPanel.vue'
 import AgentFilter from '@/components/AgentFilter.vue'
 import AppointmentCard from '@/components/AppointmentCard.vue'
-import CreateAppointmentForm from '@/components/CreateAppointmentForm.vue'
-import EditAppointmentForm from '@/components/EditAppointmentForm.vue'
+import AppointmentForm from '@/components/AppointmentForm.vue'
+import PageHeader from '@/components/PageHeader.vue'
 
 const appointments = ref<Appointment[]>([])
 const agents = ref<Agent[]>([])
 const filtered = ref<Appointment[]>([])
 
 const loaded = ref(false)
-const createAppointmentDrawer = ref(false)
-const editAppointmentDrawer = ref(false)
+const formDrawer = ref(false)
 const statusOptions = ref(['All', Statuses.UPCOMING, Statuses.COMPLETED, Statuses.CANCELLED])
 
 onMounted(async() => {
@@ -55,8 +54,39 @@ watch(filters, (changed) => {
     f = f.filter((appointment) => appointment.status === filters.status)
   }
 
+  if (filters.from_date) {
+    f = f.filter((appointment) => new Date(appointment.appointment_date) >= new Date(filters.from_date))
+  }
+
+  if (filters.to_date) {
+    f = f.filter((appointment) => new Date(appointment.appointment_date) <= new Date(filters.to_date))
+  }
+
+  if (filters.search) {
+    f = f.filter((appointment) => appointment.address.toLowerCase().includes(filters.search.toLowerCase()))
+    console.log('Hello World', filters.search)
+  }
   filtered.value = f
 }, { deep: true })
+
+const formType = ref('')
+const formData = ref<Appointment>()
+function openForm(type: 'create' | 'edit', appointment?: Appointment) {
+  formType.value = type
+
+  if ('create' === formType.value) {
+    formData.value = {
+      appointment_date: '',
+      address: '',
+      status: Statuses.UPCOMING,
+      agents: [],
+      contact: [],
+    }
+  } else {
+    formData.value = appointment
+  }
+  formDrawer.value = true
+}
 </script>
 
 <template>
@@ -69,7 +99,6 @@ watch(filters, (changed) => {
           :agents="agents"
           class="col-span-12 md:col-span-6 md:row-start-1 lg:col-span-3"
         />
-        <p>{{ filters.status }}</p>
         <SelectInput
           v-model="filters.status"
           class="col-span-12 md:col-span-4 lg:col-span-2"
@@ -82,35 +111,22 @@ watch(filters, (changed) => {
           class="col-span-12 md:col-span-6 md:row-start-1 lg:row-auto lg:col-span-3"
         />
       </div>
-      <div class="flex flex-col-reverse mt-4 md:flex-row md:justify-between md:mt-8 md:mb-4">
-        <p class="mt-6 mb-2 space-x-1 md:flex md:flex-col md:mt-0 md:mb-0">
-          <span class="text-base font-semibold text-grey-950 md:text-2xl">{{ appointments.length }}</span>
-          <span class="text-base text-grey-500">Appointments Found</span>
-        </p>
-        <AppButton label="Create Appointment" :icon="IconCirclePlus" @click="createAppointmentDrawer = true" />
-      </div>
+      <PageHeader :length="filtered.length" @create-appointment="openForm('create')" />
       <div class="space-y-4">
         <AppointmentCard
           v-for="appointment in filtered"
           :key="appointment.id"
           :appointment="appointment"
-          @click="() => {}"
+          @click="openForm('edit', appointment)"
         />
       </div>
     </div>
     <Drawer
-      v-model="createAppointmentDrawer"
-      title="Create Appointment"
-      :icon="IconCalendarPlus"
+      v-model="formDrawer"
+      :title="formType === 'create'? 'Create Appointment' : 'Edit Appointment'"
+      :icon="formType === 'create'? IconCalendarPlus : IconEdit"
     >
-      <CreateAppointmentForm @cancel="createAppointmentDrawer = false" />
-    </Drawer>
-    <Drawer
-      v-model="editAppointmentDrawer"
-      title="Edit Appointment"
-      :icon="IconEdit"
-    >
-      <EditAppointmentForm />
+      <AppointmentForm :form-data="formData" @cancel="formDrawer = false" />
     </Drawer>
   </div>
 </template>

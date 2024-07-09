@@ -5,6 +5,7 @@ defineProps({
     default: '32',
   },
   icon: {
+    type: Function,
     required: true,
   },
 })

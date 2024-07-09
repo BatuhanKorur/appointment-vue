@@ -6,11 +6,9 @@ const model = defineModel({
 defineProps({
   label: {
     type: String,
-    default: '',
+    default: null,
   },
 })
-
-const emits = defineEmits(['focus'])
 </script>
 
 <template>
@@ -19,7 +17,7 @@ const emits = defineEmits(['focus'])
       {{ label }}
     </label>
     <div class="input-wrapper">
-      <input v-model="model" type="text" @focusin="emits('focus', true)">
+      <input v-model="model" type="text">
     </div>
   </div>
 </template>

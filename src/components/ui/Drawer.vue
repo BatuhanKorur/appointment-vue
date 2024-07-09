@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { IconX } from '@tabler/icons-vue'
-import IconButton from '@/components/ui/IconButton.vue'
+import { IconButton } from '@/components/ui'
+
 const model = defineModel({
   type: Boolean,
   default: false,

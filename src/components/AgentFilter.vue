@@ -3,15 +3,18 @@ import { ref, computed } from 'vue'
 import type { Agent } from '@/types'
 import { Avatar, ListBox } from '@/components/ui'
 import AgentItem from '@/components/AgentItem.vue'
-import { fullName, initials } from '@/utils'
 
 const props = defineProps<{ agents: Agent[] }>()
+const listShow = ref(false)
+
+// Array model for selected agents' field IDs'
 const model = defineModel({
   type: Array,
   required: true,
 })
-const previews = computed(() => props.agents.slice(0, 4))
-const listShow = ref(false)
+
+// Limit to show 3 previews initially
+const previews = computed(() => props.agents.slice(0, 3))
 
 function onAgentSelect(agent: Agent) {
   const f = agent.field_id
@@ -20,6 +23,8 @@ function onAgentSelect(agent: Agent) {
   } else {
     model.value.push(f)
   }
+
+  listShow.value = false
 }
 </script>
 
@@ -29,23 +34,39 @@ function onAgentSelect(agent: Agent) {
       <Avatar
         v-for="agent in previews"
         :key="agent.id"
-        :name="fullName(agent.first_name, agent.last_name)"
-        :background="agent.color"
+        :agent="agent"
         :active="model.includes(agent.field_id)"
         @click="onAgentSelect(agent)"
-      >
-        {{ initials(agent.first_name, agent.last_name) }}
-      </Avatar>
+      />
       <Avatar
         v-if="previews.length < props.agents.length"
-        :label="`+${props.agents.length - previews.length }`"
         @click="listShow = true"
-      />
+      >
+        {{ props.agents.length - previews.length }}
+      </Avatar>
     </div>
     <ListBox v-model="listShow" class="w-72">
-      <div v-for="agent in agents" :key="agent.id" class="cursor-pointer">
+      <div
+        v-for="agent in agents"
+        :key="agent.id"
+        :class="model.includes(agent.field_id) ? 'agent-item selected' : 'agent-item'"
+      >
         <AgentItem :agent="agent" class="p-4" @click="onAgentSelect(agent)" />
       </div>
     </ListBox>
   </div>
 </template>
+
+<style scoped lang="postcss">
+.agent-item {
+	@apply cursor-pointer;
+
+	&.selected {
+		@apply bg-blue-100;
+	}
+
+	&:not(.selected) {
+		@apply bg-white hover:bg-grey-100;
+	}
+}
+</style>

@@ -1,3 +1,4 @@
-export default function fullName(firstName: string, lastName: string): string {
-  return `${firstName} ${lastName}`
+import type { Agent, Contact } from '@/types'
+export default function fullName(obj: Agent | Contact) {
+  return `${obj.first_name} ${obj.last_name}`
 }

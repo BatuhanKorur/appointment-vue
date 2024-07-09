@@ -2,6 +2,12 @@
 import { ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 const box = ref()
+const props = defineProps({
+  empty: {
+    type: Boolean,
+    default: false,
+  },
+})
 const model = defineModel({
   required: true,
 })
@@ -13,9 +19,13 @@ onClickOutside(box, () => model.value = false)
     <Transition name="fade" mode="out-in">
       <div
         v-if="model"
-        class="absolute bg-white border rounded-lg shadow-md w-full h-64 overflow-y-auto divide-y divide-grey-200"
+        :class="empty ? 'h-24' :'h-64'"
+        class="absolute bg-white border rounded-lg shadow-md w-full overflow-y-auto divide-y divide-grey-200"
       >
-        <slot />
+        <div v-if="empty" class="size-full f-center">
+          <p class="text-md italic text-grey-500">Nothing found</p>
+        </div>
+        <slot v-if="!empty" />
       </div>
     </Transition>
   </div>

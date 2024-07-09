@@ -13,9 +13,9 @@ defineProps<{ agent: Agent }>()
       }"
     >
       <span class="text-xs font-semibold text-white leading-none">
-        {{ initials(agent.first_name, agent.last_name) }}
+        {{ initials(agent) }}
       </span>
     </div>
-    <p>{{ fullName(agent.first_name, agent.last_name) }}</p>
+    <p>{{ fullName(agent) }}</p>
   </div>
 </template>

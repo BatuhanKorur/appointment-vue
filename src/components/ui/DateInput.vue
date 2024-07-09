@@ -22,7 +22,11 @@ defineProps({
       {{ label }}
     </label>
     <div class="input-wrapper">
-      <input v-model="model" :type="dateOnly ? 'date' : 'datetime-local'">
+      <input
+        v-model="model"
+        v-bind="$attrs"
+        :type="dateOnly ? 'date' : 'datetime-local'"
+      >
     </div>
   </div>
 </template>

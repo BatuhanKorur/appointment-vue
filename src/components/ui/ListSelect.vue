@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, PropType } from 'vue'
+import { ref, type PropType } from 'vue'
 import type { Contact, Agent } from '@/types'
 import { onClickOutside } from '@vueuse/core'
 import { ListBox, TextInput } from '@/components/ui'
@@ -12,7 +12,7 @@ const props = defineProps({
     default: '',
   },
   options: {
-    type: Array,
+    type: Array as PropType<Contact[] | Agent[]>,
     default: () => [],
   },
   selectFrom: {
@@ -23,24 +23,29 @@ const props = defineProps({
 
 const input = ref('')
 const filtered = ref<Contact[] | Agent[]>([])
-const listbox = ref(false)
-const listboxRef = ref()
+const showBox = ref(false)
 
+// Filters options based on input value and emits selected option when clicked on a list item
 function onInput(e: Event) {
+  showBox.value = true
   input.value = (e.target as HTMLInputElement).value
+  // Transforms all options to lowercase for case-insensitive search
   filtered.value = props.options.filter((item) => {
     const name = `${item.first_name.toLowerCase()} ${item.last_name.toLowerCase()}`
     return name.includes(input.value.toLowerCase())
-  })
+  }) as (Contact & Agent)[]
 }
 
+// Emits selected contact or agent when clicked on a list item
 const emits = defineEmits(['select'])
-function onSelect(contact: Contact) {
-  listbox.value = false
-  emits('select', contact)
+function onSelect(option: Contact | Agent) {
+  showBox.value = false
+  emits('select', option)
 }
 
-onClickOutside(listboxRef, () => listbox.value = false)
+// Closes model when clicked outside
+const listboxRef = ref()
+onClickOutside(listboxRef, () => showBox.value = false)
 </script>
 
 <template>
@@ -49,9 +54,8 @@ onClickOutside(listboxRef, () => listbox.value = false)
       :value="input"
       :label="label"
       @input="onInput"
-      @click="listbox = true"
     />
-    <ListBox ref="listboxRef" v-model="listbox">
+    <ListBox ref="listboxRef" v-model="showBox" :empty="filtered.length === 0">
       <template v-if="selectFrom === 'contacts'">
         <ContactItem
           v-for="option in filtered"

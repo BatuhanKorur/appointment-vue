@@ -10,7 +10,7 @@ defineProps<{
 <template>
   <div class="space-y-0.5">
     <p class="text-grey-900 font-medium">
-      {{ contact.first_name }} {{ contact.last_name }}
+      {{ fullName(contact) }}
     </p>
     <div class="flex flex-col space-y-1">
       <div class="flex items-center text-grey-700 space-x-1">

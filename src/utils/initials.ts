@@ -1,3 +1,4 @@
-export default function initials(firstName: string, lastName: string): string {
-  return `${firstName.charAt(0).toUpperCase()}${lastName.charAt(0).toUpperCase()}`
+import type { Agent, Contact } from '@/types'
+export default function initials(obj: Agent | Contact) {
+  return `${obj.first_name.charAt(0).toUpperCase()}${obj.last_name.charAt(0).toUpperCase()}`
 }
