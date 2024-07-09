@@ -19,7 +19,7 @@ const props = defineProps({
 <template>
   <div>
     <div
-      class="rounded-full f-center"
+      class="rounded-full f-center border-4 border-white"
       :style="{
         backgroundColor: background,
         width: size + 'px',

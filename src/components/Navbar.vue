@@ -6,10 +6,10 @@ import FilterSearch from '@/components/filters/FilterSearch.vue'
 </script>
 
 <template>
-  <div class="border-b border-grey-300 py-6 mb-6 grid grid-cols-10 gap-x-4">
-    <FilterAgents class="col-span-2" />
-    <FilterStatus class="col-span-2" />
-    <FilterDate class="col-span-2" />
-    <FilterSearch class="col-span-4" />
+  <div class="grid grid-cols-1 gap-y-">
+    <FilterAgents />
+    <FilterStatus />
+    <FilterDate />
+    <FilterSearch />
   </div>
 </template>
