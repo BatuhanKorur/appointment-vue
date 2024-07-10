@@ -2,28 +2,24 @@
 import { onMounted, ref } from 'vue'
 import type { Appointment, Contact, Agent } from '@/types'
 import { Airtable } from '@/server/api'
-
+import { Avatar } from '@/components/ui'
 import ContactItem from '@/components/ContactItem.vue'
 import AppointmentStatus from '@/components/AppointmentStatus.vue'
-
 import AddressCard from '@/components/AddressCard.vue'
-import { Avatar } from '@/components/ui'
-import { fullName } from '@/utils'
 
 const props = defineProps<{ appointment: Appointment }>()
 const emits = defineEmits(['click'])
 const contact = ref<Contact>()
 const agents = ref<Agent[]>([])
+
 onMounted(async() => {
   // There is only one contact associated with the appointment
   contact.value = await Airtable.getContact(props.appointment.contact[0])
 
   // There may be multiple agents associated with the appointment
-  if (props.appointment.agents) {
-    for (const agentId of props.appointment.agents) {
-      const agent = await Airtable.getAgent(agentId)
-      agents.value.push(agent)
-    }
+  const a = props.appointment.agents
+  if (a && 0 < a.length) {
+    agents.value = await Promise.all(a.map(async(agentId) => await Airtable.getAgent(agentId)))
   }
 })
 
@@ -42,7 +38,7 @@ function onClick() {
       :status="appointment.status"
       class="status"
     />
-    <div class="inline-flex space-x-[-16px]">
+    <div class="inline-flex space-x-[-16px] agents">
       <Avatar
         v-for="agent in agents"
         :key="agent.id"

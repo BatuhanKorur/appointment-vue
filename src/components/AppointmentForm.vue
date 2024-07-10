@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { onMounted, ref, reactive, type PropType } from 'vue'
 import { Airtable } from '@/server/api'
-import { type Contact, type Agent, type Appointment, Tables } from '@/types'
+import { type Contact, type Agent, type Appointment, Tables, Statuses } from '@/types'
 import { IconX } from '@tabler/icons-vue'
-import { TextInput, DateInput, AppButton, ListSelect, IconButton } from '@/components/ui'
+import { TextInput, DateInput, AppButton, ListSelect, IconButton, SelectInput } from '@/components/ui'
 import ContactItem from '@/components/ContactItem.vue'
 import AgentItem from '@/components/AgentItem.vue'
 import ErrorBox from '@/components/ErrorBox.vue'
+import { toast } from 'vue3-toastify'
 
 // We initialize form state
 const props = defineProps({
@@ -14,14 +15,21 @@ const props = defineProps({
     type: Object as PropType<Appointment>,
     required: true,
   },
+  formType: {
+    type: String as PropType<'edit' | 'create'>,
+    required: true,
+  },
 })
+
 const form = reactive({
   ...props.formData,
 })
 
+const statusOptions = ref([Statuses.COMPLETED, Statuses.UPCOMING, Statuses.CANCELLED])
+
 // Display selected agents and contacts in a list
 const selectedAgents = ref<Agent[]>()
-const selectedContact = ref<Contact>()
+const selectedContact = ref<Contact | null>()
 
 // We first fetch all contacts and agents from Airtable
 const contacts = ref<Contact[]>([])
@@ -36,7 +44,7 @@ onMounted(async() => {
   }
 
   if (form.agents) {
-    selectedAgents.value = form.agents.map((id) => agents.value.find((a) => a.field_id === id))
+    selectedAgents.value = agents.value.filter((a) => form.agents.includes(a.field_id))
   }
 })
 
@@ -89,10 +97,34 @@ function validateForm() {
 async function create() {
   if (!validateForm()) {
     return
-  } else {
-    console.log(form)
-    const create = await Airtable.createAppointment(form)
-    console.log(create)
+  }
+
+  const create = await Airtable.createAppointment(form)
+  if (create) {
+    toast('Appointment created successfully', {
+      theme: 'dark',
+      type: 'success',
+      position: 'bottom-center',
+      transition: 'slide',
+    })
+    emits('cancel')
+  }
+}
+
+async function update() {
+  if (!validateForm()) {
+    return
+  }
+
+  const update = await Airtable.updateAppointment(form)
+  if (update) {
+    toast('Appointment updated successfully', {
+      theme: 'dark',
+      type: 'success',
+      position: 'bottom-center',
+      transition: 'slide',
+    })
+    emits('cancel')
   }
 }
 
@@ -131,10 +163,24 @@ const emits = defineEmits(['cancel'])
       </template>
     </div>
     <DateInput v-model="form.appointment_date" label="Date" />
+    <template v-if="formType === 'edit'">
+      <SelectInput v-model="form.status" :options="statusOptions" label="Status" />
+    </template>
   </div>
   <div class="flex justify-end space-x-2">
     <AppButton label="Cancel" color="grey" @click="cancel" />
-    <AppButton label="Submit" color="blue" @click="create" />
+    <AppButton
+      v-if="formType === 'create'"
+      label="Submit"
+      color="blue"
+      @click="create"
+    />
+    <AppButton
+      v-if="formType === 'edit'"
+      label="Edit"
+      color="green"
+      @click="update"
+    />
   </div>
   <div class="space-y-2 mt-8">
     <ErrorBox v-for="(error, index) in validations" :key="index">

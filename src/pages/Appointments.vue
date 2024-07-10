@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onMounted, ref, watch, reactive } from 'vue'
-import { IconCirclePlus, IconCalendarPlus, IconEdit } from '@tabler/icons-vue'
+import { IconCalendarPlus, IconEdit } from '@tabler/icons-vue'
 import { Statuses, Tables, type Appointment, type Agent } from '@/types'
 import { Airtable } from '@/server/api'
-import { AppButton, Drawer, SelectInput, DateInput, TextInput } from '@/components/ui'
+import { Drawer, SelectInput, DateInput, TextInput } from '@/components/ui'
 import LoadingPanel from '@/components/LoadingPanel.vue'
 import AgentFilter from '@/components/AgentFilter.vue'
 import AppointmentCard from '@/components/AppointmentCard.vue'
@@ -64,7 +64,6 @@ watch(filters, (changed) => {
 
   if (filters.search) {
     f = f.filter((appointment) => appointment.address.toLowerCase().includes(filters.search.toLowerCase()))
-    console.log('Hello World', filters.search)
   }
   filtered.value = f
 }, { deep: true })
@@ -126,7 +125,11 @@ function openForm(type: 'create' | 'edit', appointment?: Appointment) {
       :title="formType === 'create'? 'Create Appointment' : 'Edit Appointment'"
       :icon="formType === 'create'? IconCalendarPlus : IconEdit"
     >
-      <AppointmentForm :form-data="formData" @cancel="formDrawer = false" />
+      <AppointmentForm
+        :form-data="formData"
+        :form-type="formType"
+        @cancel="formDrawer = false"
+      />
     </Drawer>
   </div>
 </template>
