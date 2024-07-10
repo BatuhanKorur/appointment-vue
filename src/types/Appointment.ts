@@ -6,4 +6,5 @@ export type Appointment = {
   status: string
   agents: string[]
   contact: string[]
+  contact_str: string[]
 }

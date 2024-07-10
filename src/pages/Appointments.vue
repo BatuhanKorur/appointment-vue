@@ -9,6 +9,7 @@ import AgentFilter from '@/components/AgentFilter.vue'
 import AppointmentCard from '@/components/AppointmentCard.vue'
 import AppointmentForm from '@/components/AppointmentForm.vue'
 import PageHeader from '@/components/PageHeader.vue'
+import { toast } from 'vue3-toastify'
 
 const appointments = ref<Appointment[]>([])
 const agents = ref<Agent[]>([])
@@ -24,6 +25,12 @@ onMounted(async() => {
     agents.value = await Airtable.getAll(Tables.AGENTS)
     filtered.value = appointments.value
   } catch (error) {
+    toast('Failed to load appointment', {
+      theme: 'dark',
+      type: 'error',
+      position: 'bottom-center',
+      transition: 'slide',
+    })
     console.error('Failed to load appointments:', error)
   } finally {
     loaded.value = true
@@ -38,12 +45,19 @@ const filters = reactive({
   search: '',
 })
 
-watch(filters, (changed) => {
+watch(filters, () => {
   let f = []
+  // TODO: Needs improvements, code is dirty
   if (0 < filters.agents.length) {
     appointments.value.forEach((appointment) => {
-      if (appointment.agents.some((agentId) => filters.agents.includes(agentId))) {
-        f.push(appointment)
+      if (appointment.agents) {
+        appointment.agents.forEach((agentId) => {
+          if (filters.agents.includes(agentId)) {
+            f.push(appointment)
+            return
+          }
+        })
+        return
       }
     })
   } else {
@@ -63,8 +77,12 @@ watch(filters, (changed) => {
   }
 
   if (filters.search) {
-    f = f.filter((appointment) => appointment.address.toLowerCase().includes(filters.search.toLowerCase()))
+    f = f.filter((appointment) =>
+      appointment.address.toLowerCase().includes(filters.search.toLowerCase())
+      || appointment.contact_str[0].toLowerCase().includes(filters.search.toLowerCase()),
+    )
   }
+
   filtered.value = f
 }, { deep: true })
 
