@@ -19,14 +19,29 @@ label {
 }
 
 .input-wrapper {
-	@apply border rounded-md;
-	input, select {
-		@apply bg-transparent focus:outline-0 px-4;
-		@apply min-h-[52px] w-full;
+	@apply border bg-white rounded-md flex items-center;
+  @apply transition duration-150 ease-in-out;
+
+  input, select {
+		@apply bg-transparent focus:outline-0 px-3 min-h-[48px] w-full;
 	}
-	&:focus-within {
+
+  &:focus-within {
 		@apply border-blue-500;
+    .icon {
+      @apply text-blue-500;
+    }
 	}
+
+  .icon {
+    @apply transition duration-150 ease-in-out;
+    @apply text-grey-400 pl-2 -mr-1;
+  }
+
+  .clear {
+    @apply transition-all duration-150 ease-in-out cursor-pointer;
+    @apply rounded-full bg-grey-200 size-5 p-1 mr-2;
+  }
 }
 
 .fade-enter-active,

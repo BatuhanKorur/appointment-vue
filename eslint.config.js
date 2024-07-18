@@ -1,13 +1,13 @@
-import eslintConfig from '@batuhankorur/eslint'
+import { lint } from '@batuhankorur/lint-config'
 
 export default [
-  ...eslintConfig,
+  ...lint(),
   {
-    languageOptions: {
-      parserOptions: {
-        parser: '@typescript-eslint/parser',
-        sourceType: 'module',
-      },
+    rules: {
+      'unicorn/filename-case': 'off',
+      'tailwindcss/no-custom-classname': 'off',
+      'unicorn/prevent-abbreviations': 'off',
+      'unicorn/explicit-length-check': 'off',
     },
   },
 ]

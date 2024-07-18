@@ -3,11 +3,8 @@ const model = defineModel({
   type: String,
   required: true,
 })
+
 defineProps({
-  label: {
-    type: String,
-    default: '',
-  },
   options: {
     type: Array,
     required: true,
@@ -21,12 +18,9 @@ function onChange(event: Event) {
 </script>
 
 <template>
-  <div>
-    <label v-if="label">
-      {{ label }}
-    </label>
+  <div v-bind="$attrs">
     <div class="input-wrapper">
-      <select :value="modelValue" @change="onChange">
+      <select :value="modelValue" @change="onChange" class="w-full text-base">
         <option v-for="(option, index) in options" :key="index" :selected="option === modelValue">
           {{ option }}
         </option>

@@ -1,30 +1,24 @@
 <script setup lang="ts">
-import type { Contact } from '@/types'
-import { fullName } from '@/utils'
-import { IconMail, IconPhone } from '@tabler/icons-vue'
-defineProps<{
-  contact: Contact
-}>()
+import { type PropType } from 'vue'
+import { type Contact } from '@/types'
+import { fullName } from '../utils'
+defineProps({
+  person: {
+    type: Object as PropType<Contact>,
+  },
+})
 </script>
 
 <template>
-  <div class="space-y-0.5">
-    <p class="text-grey-900 font-medium">
-      {{ fullName(contact) }}
-    </p>
-    <div class="flex flex-col space-y-1">
-      <div class="flex items-center text-grey-700 space-x-1">
-        <IconMail size="20" stroke="1.5" />
-        <span class="text-[15px] leading-none">
-          {{ contact.email }}
-        </span>
-      </div>
-      <div class="flex items-center text-grey-700 space-x-1">
-        <IconPhone size="20" stroke="1.5" />
-        <span class="text-[15px] leading-none">
-          {{ contact.phone }}
-        </span>
+<div>
+  <Transition name="fade">
+    <div v-if="person">
+      <p class="font-medium text-grey-900">{{ person.first_name }} {{ person.last_name }}</p>
+      <div class="-space-y-0.5 text-xs text-grey-500">
+        <p>{{ person.email }}</p>
+        <p>{{ person.phone }}</p>
       </div>
     </div>
-  </div>
+  </Transition>
+</div>
 </template>

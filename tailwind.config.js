@@ -6,6 +6,17 @@ export default {
   ],
   theme: {
     extend: {
+      fontSize: {
+        'xxs': '12px',
+        'xs': '13px',
+        'sm': '14px',
+        'base': '15px',
+        'md': '16px',
+        'lg': '18px',
+        'xl': '20px',
+        '2xl': '24px',
+        '3xl': '28px',
+      },
       colors: {
         // We use british spelling for consistency
         grey: {
