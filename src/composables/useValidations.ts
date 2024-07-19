@@ -1,7 +1,6 @@
 import { ref } from 'vue'
 /**
  * Validates the provided appointment form.
- * @param form - The appointment form object containing contact, agents, address, and appointment_date fields.
  * @returns A boolean value indicating whether the form is valid or not.
  */
 export default function useValidation() {

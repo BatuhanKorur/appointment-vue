@@ -5,8 +5,12 @@ import AgentItem from '@/components/AgentItem.vue'
 import AgentAvatar from '@/components/AgentAvatar.vue'
 import SelectPopover from '@/components/form/SelectPopover.vue'
 
+/**
+ * @model model: Array of agent.field_id
+ * @description Selected agents model. Array includes agent.field_id
+ */
 const model = defineModel({
-  type: Array,
+  type: Array as PropType<string[]>,
   default: [],
 })
 
@@ -30,11 +34,16 @@ onMounted(() => {
   }
 })
 
-function onAgentSelect(agent: Agent) {
-  if (model.value.includes(agent.field_id)) {
-    model.value = model.value.filter((id) => id !== agent.field_id)
+/**
+ * Handle agent selection
+ * If includes, removes agent.field_id from model. Otherwise, adds agent.field_id to model
+ * @param fieldId
+ */
+function onAgentSelect(fieldId: string) {
+  if (model.value.includes(fieldId)) {
+    model.value = model.value.filter((id) => id !== fieldId)
   } else {
-    model.value.push(agent.field_id)
+    model.value.push(fieldId)
   }
 }
 </script>
@@ -46,7 +55,7 @@ function onAgentSelect(agent: Agent) {
                    :key="agent.field_id"
                    :agent="agent"
                    :selected="model.includes(agent.field_id)"
-                   @click="onAgentSelect(agent)"/>
+                   @click="onAgentSelect(agent.field_id)"/>
       <AgentAvatar v-if="others.length > 0" :label="'+' + others.length" @click="isExpanded = true"/>
     </div>
     <SelectPopover v-model="isExpanded">
@@ -54,7 +63,7 @@ function onAgentSelect(agent: Agent) {
                  :key="agent.field_id"
                  :person="agent"
                  :selected="model.includes(agent.field_id)"
-                 @click="onAgentSelect(agent)"/>
+                 @click="onAgentSelect(agent.field_id)"/>
     </SelectPopover>
   </div>
 </template>

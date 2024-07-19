@@ -29,14 +29,14 @@ defineProps({
 </template>
 
 <style scoped lang="postcss">
-input[type="date"], input[type="datetime-local"] {
+input[type="date"],
+input[type="datetime-local"] {
   @apply relative;
-}
 
-input[type="date"]::-webkit-calendar-picker-indicator,
-input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-  @apply absolute top-0 right-0 size-full p-0;
-  color: transparent;
-  background: transparent;
+  &::-webkit-calendar-picker-indicator {
+    @apply absolute top-0 right-0 size-full p-0 cursor-pointer;
+    color: transparent;
+    background: transparent;
+  }
 }
 </style>

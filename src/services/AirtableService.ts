@@ -1,5 +1,5 @@
 import axios from 'axios'
-export type Tables = 'Agents' | 'Contacts' | 'Appointments'
+type Tables = 'Agents' | 'Contacts' | 'Appointments'
 
 const AirtableService = {
   URL: `https://api.airtable.com/v0/${import.meta.env.VITE_AIRTABLE_BASE_ID}`,
@@ -9,7 +9,6 @@ const AirtableService = {
 
   /**
    * Retrieves all records from the specified Airtable table.
-   *
    * @param {Tables} table - The table to retrieve records from.
    */
   async getAll(table: Tables) {
@@ -47,7 +46,10 @@ const AirtableService = {
         headers: { ...this.HEADERS },
       },
     )
-    return response.data.records[0]
+    return {
+      field_id: response.data.records[0].id,
+      ...response.data.records[0].fields,
+    }
   },
 
   /**
@@ -72,7 +74,11 @@ const AirtableService = {
         headers: { ...this.HEADERS },
       },
     )
-    return response.data.records[0]
+
+    return {
+      field_id: response.data.records[0].id,
+      ...response.data.records[0].fields,
+    }
   },
 }
 

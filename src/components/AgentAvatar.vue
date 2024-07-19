@@ -32,11 +32,7 @@ const hover = useElementHover(avatar)
 <template>
   <div class="relative">
     <div ref="avatar"
-         class="rounded-full p-[3px]"
-         :class="{
-      'clickable': clickable,
-      'selected': selected
-         }"
+         :class="['rounded-full p-[3px]', { 'clickable': clickable, 'selected': selected}]"
          :style="{ width: size, height: size }"
     >
       <div v-if="agent"
@@ -61,6 +57,13 @@ const hover = useElementHover(avatar)
 </template>
 
 <style scoped lang="postcss">
+.avatar {
+  @apply flex items-center justify-center size-full rounded-full;
+  span {
+    @apply leading-none text-xs font-semibold;
+  }
+}
+
 .clickable {
   @apply cursor-pointer transition duration-200 ease-in-out;
 
@@ -73,11 +76,4 @@ const hover = useElementHover(avatar)
   }
 }
 
-.avatar {
-  @apply flex items-center justify-center size-full rounded-full;
-
-  span {
-    @apply leading-none text-xs font-semibold;
-  }
-}
 </style>

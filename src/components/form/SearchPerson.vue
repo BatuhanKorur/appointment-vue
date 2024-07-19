@@ -2,18 +2,25 @@
 import { type PropType, ref, watch } from 'vue'
 import type { Contact, Agent } from '@/types'
 import { IconSquareXFilled } from '@tabler/icons-vue'
-
 import SelectPopover from '@/components/form/SelectPopover.vue'
 import ContactItem from '@/components/ContactItem.vue'
 import AgentItem from '@/components/AgentItem.vue'
 
+/**
+ * Component to search for a person and add them to a list
+ * @param {Array} data - List of contacts or agents
+ */
 type Person = Contact[] | Agent[]
-
 const model = defineModel({
   type: Array as PropType<Person>,
   default: () => [],
 })
 
+/**
+ * @param {Array} data - List of contacts or agents
+ * @param {String} personType - Type of person to search for
+ * @param {Boolean} multiple - Allow multiple selections
+ */
 const props = defineProps({
   data: {
     type: Array as PropType<Person>,

@@ -28,19 +28,19 @@ import Drawer from '@/components/Drawer.vue'
 const tableColumns = [
   {
     label: 'Contact',
-    classStyle: 'w-3/12',
+    classStyle: 'w-[25%]',
   },
   {
     label: 'Address',
-    classStyle: 'w-4/12',
+    classStyle: 'w-[35%] min-w-72',
   },
   {
     label: 'Status',
-    classStyle: 'w-3/12',
+    classStyle: 'w-[20%] min-w-64',
   },
   {
     label: 'Agents',
-    classStyle: 'w-2/12',
+    classStyle: 'w-[20%]',
   },
 ]
 
@@ -50,7 +50,7 @@ const agents = ref<Agent[]>([])
 const contacts = ref<Contact[]>([])
 
 // Data displayed, filtered and paginated
-const tableData = ref<Appointment[]>([])
+const tableData = ref<Appointment[] | []>([])
 
 // Pagination sets after initialization
 let pagination = ref()
@@ -126,15 +126,15 @@ function handleForm(action: string, data: Appointment | null) {
  * @param msg - The toast message to display
  * @param appointment - The updated appointment data. (Or newly created)
  */
-function handleFormResponse(action, msg, appointment: Appointment) {
+function handleFormResponse(action: string, msg: string, appointment: Appointment) {
   // If creating a new appointment, add it to the beginning of the table data array.
   if ('create' === action) {
-    tableData.value.unshift(appointment.fields)
+    tableData.value.unshift(appointment)
   }
   // If editing an existing appointment, update the corresponding item in the table data array.
   if ('edit' === action) {
     tableData.value = tableData.value.map((apm) => {
-      return appointment.id === apm.field_id ? appointment.fields : apm
+      return appointment.field_id === apm.field_id ? appointment : apm
     })
   }
   toast.success(msg, {

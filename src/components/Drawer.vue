@@ -25,7 +25,7 @@ defineProps({
         <div v-if="model" class="absolute inset-0">
           <div class="drawer-container">
             <div @click="model = false" class="float-right">
-              <div class="rounded-lg bg-indigo-200/60 px-4 py-1.5">
+              <div class="t-200 cursor-pointer rounded-lg bg-indigo-200/60 px-4 py-1.5 hover:bg-indigo-200/40">
                 <p class="text-xs font-semibold text-indigo-700">Close</p>
               </div>
             </div>

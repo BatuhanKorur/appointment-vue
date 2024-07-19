@@ -21,9 +21,9 @@ export function useAppointmentsFilter() {
      * Filters the appointments based on selected agents
      */
     if (0 < filters.agents.length) {
-      for (const appointment of items) {
-        if (filters.agents.includes(appointment.agents[0])) {
-          f.push(appointment)
+      for (const apt of items) {
+        if (apt.agents.every((agent) => filters.agents.includes(agent))) {
+          f.push(apt)
         }
       }
     } else {

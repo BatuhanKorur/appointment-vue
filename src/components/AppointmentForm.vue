@@ -126,7 +126,7 @@ const StatusOptions = computed(() => {
     </div>
     <div>
       <label>Address</label>
-      <TextInput v-model="form.address" placeholder="Enter address"/>
+      <TextInput type="address" v-model="form.address" placeholder="Enter address"/>
       <Transition name="fade" mode="out-in">
         <ErrorBox v-if="errors.address" :msg="errors.address"/>
       </Transition>

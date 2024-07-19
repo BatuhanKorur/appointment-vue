@@ -8,7 +8,7 @@ defineProps({
 </script>
 
 <template>
-<div class="mt-1 rounded-md border border-red-500/10 bg-red-700/15 px-3 py-2">
-  <p class="text-sm text-red-900">{{ msg }}</p>
+<div class="mt-1 rounded-md border border-red-700/10 bg-red-100 px-3 py-1.5">
+  <p class="text-[13.5px] font-medium text-red-900">{{ msg }}</p>
 </div>
 </template>

@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import PaginationButton from '@/components/table/PaginationButton.vue'
+import { computed } from 'vue'
+import { IconChevronLeft, IconChevronRight } from '@tabler/icons-vue'
+
 const model = defineModel({
   type: Object,
 })
-
 const emits = defineEmits(['update'])
 
 /**
  * Handles the next page navigation for the table.
  * @description Increases the current page number if it's less than the total pages. Updates the tableData with the new showing range.
  */
-function onNextPage() {
+function handleNext() {
   if (model.value.currentPage < model.value.totalPages) {
     model.value.currentPage++
     emits('update')
@@ -21,66 +22,94 @@ function onNextPage() {
  * Handles the previous page navigation for the table.
  * @description Decreases the current page number if it's greater than 1. Updates the tableData with the new showing range.
  */
-function onPrevPage() {
+function handlePrev() {
   if (1 < model.value.currentPage) {
     model.value.currentPage--
     emits('update')
   }
 }
+
+/**
+ * Handles the page navigation for the table.
+ * @param page
+ */
+function handlePage(page: number) {
+  model.value.currentPage = page
+  emits('update')
+}
+
+/**
+ * Calculates the range of items to be displayed on the current page.
+ */
+const isMultiPage = computed(() => 1 !== model.value.totalPages)
+const onFirstPage = computed(() => 1 === model.value.currentPage)
+const onLastPage = computed(() => model.value.currentPage === model.value.totalPages)
+const onBetweenPages = computed(() => 1 !== model.value.currentPage && model.value.currentPage !== model.value.totalPages)
 </script>
 
 <template>
-  <div class="f-between w-full border-t px-5 py-4">
+  <div class="f-between border-t border-grey-200 px-5 pb-3 pt-4">
     <div>
-      <p class="text-sm text-grey-700">
+      <p class="text-sm text-grey-500 md:text-base">
         Showing
         <span class="font-medium text-grey-800">{{ model.showingFrom }}</span>
         to
         <span class="font-medium text-grey-800">{{ model.showingTo }}</span>
         of
-        <span class="font-medium text-grey-800">{{ model.totalItems }}</span>
+        <span class="font-medium text-grey-900">{{ model.totalItems }}</span>
         entries
       </p>
     </div>
-    <div class="flex items-center space-x-6">
-      <div class="flex h-[40px] rounded-md border border-grey-200">
-        <PaginationButton v-if="model.totalPages !== 1"
-                          class="rounded-l"
-                          label="left"
-                          @click="onPrevPage"
-        />
-        <PaginationButton label="1"
-                          :active="model.currentPage === 1"
-        />
-        <PaginationButton v-if="model.totalPages > 2"
-                          label="..."
-                          :active="model.currentPage !== 1 && model.currentPage!== model.totalPages"
-        />
-        <PaginationButton v-if="model.totalPages > 3"
-                          :label="model.totalPages"
-                          :active="model.currentPage === model.totalPages"
-        />
-        <PaginationButton v-if="model.totalPages !== 1"
-                          class="rounded-r"
-                          label="right"
-                          @click="onNextPage"
-        />
-      </div>
+    <div class="p-buttons">
+      <button v-if="isMultiPage" @click="handlePrev">
+        <IconChevronLeft class="icon"/>
+      </button>
+      <button :class="{'active': onFirstPage}" @click="handlePage(1)">
+        <span>1</span>
+      </button>
+      <button v-if="isMultiPage" :class="{'active': onBetweenPages}">
+        <span>...</span>
+      </button>
+      <button v-if="isMultiPage"
+              :class="{'active': onLastPage}"
+              @click="handlePage(model.totalPages)">
+        <span>{{ model.totalPages }}</span>
+      </button>
+      <button v-if="isMultiPage"
+              @click="handleNext">
+        <IconChevronRight class="icon"/>
+      </button>
     </div>
   </div>
 </template>
 
 <style scoped lang="postcss">
-.per-page-select {
-  @apply flex items-center space-x-2;
+.p-buttons {
+  @apply flex border border-grey-200 rounded-md;
+}
 
-  label {
-    @apply text-sm text-grey-700;
+button {
+  @apply flex items-center justify-center transition duration-150 ease-in-out;
+  @apply cursor-pointer h-[40px] w-[48px] hover:bg-grey-100;
+
+  &:first-of-type {
+    @apply rounded-l-md;
   }
 
-  select {
-    @apply border border-grey-200 h-[40px] min-w-[64px] px-2 rounded-md;
-    @apply text-sm font-medium text-grey-800
+  &:last-of-type {
+    @apply rounded-r-md;
+  }
+
+  &.active {
+    @apply bg-blue-600 text-white;
+  }
+
+  .icon {
+    @apply size-4 text-grey-700;
+  }
+
+  span {
+    @apply text-xs font-medium leading-none;
   }
 }
 </style>

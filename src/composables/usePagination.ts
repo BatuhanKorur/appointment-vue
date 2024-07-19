@@ -2,17 +2,14 @@ import { reactive, toRefs } from 'vue'
 
 const state = reactive({
   // Pages
-  perPage: 5,
+  perPage: 10,
   currentPage: 1,
   totalPages: 0,
 
   // Showing
   showingFrom: 0,
   showingTo: 0,
-
-  // Total
   totalItems: 0,
-  data: [],
 })
 
 /**
@@ -28,9 +25,7 @@ export default function usePagination(items: unknown[] = []): {
   showingFrom: number
   showingTo: number
   totalItems: number
-  data: unknown[]
   updateShowingRange: () => unknown[]
-  resetPagination: () => void
 } {
   state.totalItems = items.length
 
@@ -46,17 +41,8 @@ export default function usePagination(items: unknown[] = []): {
     return sorted.slice(startIndex, endIndex)
   }
 
-  function resetPagination(): void {
-    state.currentPage = 1
-    state.showingFrom = 0
-    state.showingTo = 0
-    state.totalPages = 0
-    state.data = []
-  }
-
   return {
     ...toRefs(state),
     updateShowingRange,
-    resetPagination,
   }
 }
